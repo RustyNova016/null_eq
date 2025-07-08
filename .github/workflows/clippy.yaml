@@ -1,0 +1,33 @@
+name: clippy
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+env:
+  CARGO_TERM_COLOR: always
+  RUSTFLAGS: -Dwarnings
+  RUST_BACKTRACE: 1
+
+jobs:
+    clippy:
+        runs-on: ubuntu-latest
+        steps:
+          - uses: actions/checkout@v4
+    
+          - name: Install minimal toolchain
+            uses: actions-rs/toolchain@v1
+            with:
+              toolchain: stable
+              override: true
+              profile: minimal
+              components: clippy
+    
+          - uses: Swatinem/rust-cache@v2
+    
+          - uses: taiki-e/install-action@cargo-hack
+    
+          - name: Run clippy
+            run: cargo hack clippy --feature-powerset -- -D warnings

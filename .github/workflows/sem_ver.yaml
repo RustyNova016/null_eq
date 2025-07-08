@@ -1,0 +1,23 @@
+name: sem_ver
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+env:
+  CARGO_TERM_COLOR: always
+  RUSTFLAGS: -Dwarnings
+  RUST_BACKTRACE: 1
+
+jobs:
+    semver_checks:
+        runs-on: ubuntu-latest
+        steps:
+        - uses: actions/checkout@v4
+        - name: Install cargo-semver-checks
+          run: cargo install cargo-semver-checks --locked
+        - name: Run cargo-semver-checks
+          run: cargo semver-checks --all-features
+    
